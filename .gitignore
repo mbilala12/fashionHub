@@ -1,0 +1,17 @@
+# Node / tooling
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# Playwright artifacts
+playwright-report/
+test-results/
+artifacts/
+*.webm
+*.png
+trace.zip
+
+# IDE
+.vscode/
+.idea/
