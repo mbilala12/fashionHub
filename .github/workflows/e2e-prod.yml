@@ -5,14 +5,12 @@ on:
   pull_request:
   workflow_dispatch:
 
-#cancel previous runs on the same branch
 concurrency:
   group: e2e-prod-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   e2e-prod:
-    name: Prod (Chromium/Firefox/WebKit)
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,6 +18,7 @@ jobs:
       TEST_ENV: prod
       # lets TC4 paginate without rate limits
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,11 +29,21 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install deps
+      - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        uses: microsoft/playwright-github-action@v1
+      # install Playwright browsers + system deps (no deprecated action)
+      - name: Install Playwright browsers & deps
+        run: npx playwright install --with-deps
+
+      # (Optional) cache downloaded browsers to speed up runs
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-ms-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-ms-playwright-
 
       - name: Run tests (prod)
         run: npx playwright test
