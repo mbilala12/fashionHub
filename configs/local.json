@@ -1,0 +1,4 @@
+{
+  "envName": "local",
+  "baseURL": "http://localhost:4000/fashionhub"
+}

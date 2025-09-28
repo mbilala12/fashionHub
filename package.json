@@ -1,0 +1,32 @@
+{
+  "name": "fashionhub-playwright-ts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Automation Test Challenge - Fashionhub using Playwright + TypeScript",
+  "scripts": {
+    "install:pwx": "npx playwright install --with-deps",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "PWDEBUG=1 playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "report": "playwright show-report",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "test:staging": "TEST_ENV=staging playwright test",
+    "test:local": "TEST_ENV=local playwright test",
+    "test:prod": "TEST_ENV=prod playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.2",
+    "@types/node": "^20.14.10",
+    "typescript": "^5.5.4",
+    "prettier": "^3.3.3",
+    "eslint": "^9.11.1",
+    "@eslint/js": "^9.11.1",
+    "globals": "^15.9.0"
+  },
+  "type": "module"
+}
