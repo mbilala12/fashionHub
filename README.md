@@ -106,9 +106,7 @@ npm run report
 
 ### TC3 – Login
 - `tests/tc3-login.spec.ts`
-- Visits `/login.html` and logs in with:
-  - **Username:** `demouser`
-  - **Password:** `fashion123`
+- Visits `/login.html` and logs in
 - Asserts successful login via multiple heuristics (Welcome/Logout/etc.).
 
 ### TC4 – GitHub PRs → CSV

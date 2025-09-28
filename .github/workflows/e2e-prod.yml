@@ -1,0 +1,57 @@
+name: E2E – Playwright (Prod)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+#cancel previous runs on the same branch
+concurrency:
+  group: e2e-prod-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e-prod:
+    name: Prod (Chromium/Firefox/WebKit)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      TEST_ENV: prod
+      # lets TC4 paginate without rate limits
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Install Playwright browsers
+        uses: microsoft/playwright-github-action@v1
+
+      - name: Run tests (prod)
+        run: npx playwright test
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-prod
+          path: playwright-report
+          retention-days: 7
+
+      - name: Upload PR CSV artifact (TC4)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tc4-prs-csv-prod
+          path: artifacts/appwrite_open_prs.csv
+          if-no-files-found: ignore
+          retention-days: 7
