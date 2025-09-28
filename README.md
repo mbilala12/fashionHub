@@ -4,14 +4,15 @@ This repository contains a Playwright + TypeScript solution implementing the req
 
 ## ✅ What’s Included
 - Playwright test suite for **Chromium**, **Firefox**, **WebKit** (Safari)
-- **Multi-environment** support (local, staging, prod) with CLI or env var selection and automatic fallback
+- **Multi-environment** support (local, staging, prod) with CLI or env var selection and automatic fallback. also have scripts to run them from cli e.g. npm run test:prod
 - **Page Object Model** for maintainability
-- Console error watcher utility
+- Console error watcher utility, 
 - Link status verifier with HEAD/GET fallback
 - Login test with robust selectors
 - GitHub PRs exporter to **CSV**
 - HTML report artifacts
 - Linting & formatting (ESLint + Prettier)
+- yml file to run test cases on CI 
 
 ## Folder Structure
 ```
@@ -119,17 +120,16 @@ If you run the **Fashionhub Demo App** locally (as per challenge), start it on `
 ```bash
 npx playwright test --env=local
 ```
-(You can also run tests inside the official Playwright Docker image; add a simple Dockerfile if needed.)
 
-## Jenkins / CI
-- Set `TEST_ENV` env var or pass `--env=` in the CI job.
-- Artifacts: HTML report (`playwright-report/`) and CSV (`artifacts/`).
-- Example shell:
-```bash
-npm ci
-npx playwright install --with-deps
-npx playwright test --env=prod
-npx playwright show-report
+## CI
+Workflow file: .github/workflows/e2e-prod.yml
+
+What it does:
+- Runs the full suite (Chromium, Firefox, WebKit) on every push/PR against prod.
+- Installs Playwright browsers via the official action.
+- Exposes GITHUB_TOKEN so TC4 can paginate without throttling.
+- Uploads the HTML report and the PR CSV as artifacts.
+
 ```
 
 ## Notes on Selectors & Robustness
@@ -141,15 +141,6 @@ npx playwright show-report
 - If TC2 fails due to an external site returning 4xx/5xx transiently, re-run or restrict to same-origin links.
 - If the login page uses different field labels, the test tries both **label** and **placeholder** strategies.
 
-
-## Running with explicit environment
-Because Playwright parses its own CLI flags, pass custom flags **after** `--`, or prefer env vars:
-
-**Recommended (simple):**  
-```bash
-# macOS/Linux
-TEST_ENV=staging npx playwright test
-TEST_ENV=local npx playwright test
 ```
 
 **Windows PowerShell:**  
